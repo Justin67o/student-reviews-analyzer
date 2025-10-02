@@ -1,6 +1,8 @@
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, pipeline
 import streamlit as st
 
+
+model_name = "cardiffnlp/twitter-roberta-base-sentiment"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForSequenceClassification.from_pretrained(model_name)
 
