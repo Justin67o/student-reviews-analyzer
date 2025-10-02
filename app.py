@@ -16,8 +16,9 @@ label_map = {
 
 if st.button("Analyze Sentiment"):
     if user_input.strip() != "":
+        print(user_input)
         result = classifier(user_input)[0]
-        label = result['label']
+        label = label_map[result['label']]
         score = result['score']
         st.write(f"**Sentiment:** {label}")
         st.write(f"**Confidence** {score:.2f}")
