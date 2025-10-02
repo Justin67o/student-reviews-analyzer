@@ -2,7 +2,6 @@ from transformers import pipeline
 import streamlit as st
 
 classifier = pipeline("sentiment-analysis", model="cardiffnlp/twitter-roberta-base-sentiment")
-print(classifier("I am very happy!"))
 
 st.title("Student Reviews Sentiment Analyzer")
 st.write("Enter a student review and see if it's positive, neutral, or negative")
