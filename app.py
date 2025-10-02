@@ -1,29 +1,30 @@
-from transformers import AutoModelForSequenceClassification, AutoTokenizer, pipeline
-import streamlit as st
+from transformers import pipeline
+import gradio as gr
 
 
 model_name = "cardiffnlp/twitter-roberta-base-sentiment"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForSequenceClassification.from_pretrained(model_name)
-
-classifier = pipeline("sentiment-analysis", model=model, tokenizer=tokenizer)
-st.title("Student Reviews Sentiment Analyzer")
-st.write("Enter a student review and see if it's positive, neutral, or negative")
-
-user_input = st.text_area("Type review here")
+classifier = pipeline("sentiment-analysis", model=model_name)
 
 label_map = {
     "LABEL_0": "Negative",
-    "Label_1": "Neutral",
-    "Label_2": "Positive"
+    "LABEL_1": "Neutral",
+    "LABEL_2": "Positive"
 }
+def analyze_sentiment(text):
+    result = classifier(text)[0]
+    label = label_map[result['label']]
+    score = result['score']
+    return f"{label} ({score:.2f})"
 
-if st.button("Analyze Sentiment"):
-    if user_input.strip() != "":
-        result = classifier(user_input)[0]
-        label = label_map[result['label']]
-        score = result['score']
-        st.write(f"**Sentiment:** {label}")
-        st.write(f"**Confidence** {score:.2f}")
-    else:
-        st.write("Please enter some text to analyze.")
+
+iface = gr.Interface(
+    fn=analyze_sentiment,
+    inputs=gr.Textbox(lines=2, placeholder="Enter text here..."),
+    outputs="text",
+    title="Student Reviews Sentiment Analyzer",
+    description="Classifies text into positive, negative, or neutral sentiment."
+)
+
+
+if __name__ == "__main__":
+    iface.launch(share=True) 
