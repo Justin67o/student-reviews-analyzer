@@ -1,8 +1,10 @@
-from transformers import pipeline
+from transformers import AutoModelForSequenceClassification, AutoTokenizer, pipeline
 import streamlit as st
 
-classifier = pipeline("sentiment-analysis", model="cardiffnlp/twitter-roberta-base-sentiment")
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForSequenceClassification.from_pretrained(model_name)
 
+classifier = pipeline("sentiment-analysis", model=model, tokenizer=tokenizer)
 st.title("Student Reviews Sentiment Analyzer")
 st.write("Enter a student review and see if it's positive, neutral, or negative")
 
@@ -16,7 +18,6 @@ label_map = {
 
 if st.button("Analyze Sentiment"):
     if user_input.strip() != "":
-        print(user_input)
         result = classifier(user_input)[0]
         label = label_map[result['label']]
         score = result['score']
